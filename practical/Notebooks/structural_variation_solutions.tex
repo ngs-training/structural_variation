@@ -448,21 +448,30 @@ VCF}\label{looking-at-structural-variants-in-vcf}}
   used to return a count of matches.) \textbf{31, try}
 \end{enumerate}
 
-\textbf{\texttt{grep\ -c\ DEL\ ERR1015121.vcf}}
+\textbf{\texttt{grep\ -c\ "\textless{}DEL\textgreater{}"\ ERR1015121.vcf}}
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
 \setcounter{enumi}{5}
+\tightlist
 \item
   What type of event is predicted at IV:437148? What is the length of
   the SV? How many paired-end reads and split-reads support this SV
   variant call? \textbf{Deletion -370 20 PE 21 split}
+\end{enumerate}
+
+\textbf{\texttt{grep\ "437148"\ ERR1015121.vcf}}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{6}
+\tightlist
 \item
   What is the total number of SV calls predicted on the IV chromosome?
   \textbf{10, try}
 \end{enumerate}
 
-\textbf{\texttt{grep\ -c\ "IV"\ ERR1015121.vcf}}
+\textbf{\texttt{grep\ -c\ "\^{}IV"\ ERR1015121.vcf}}
 
     \hypertarget{calling-structural-variants}{%
 \section{Calling Structural
@@ -476,7 +485,7 @@ Variants}\label{calling-structural-variants}}
 \hypertarget{exercises}{%
 \subsubsection{Exercises}\label{exercises}}
 
-\texttt{grep\ "III:83065"\ ERR1015121.breakdancer.out}
+\texttt{grep\ "83065"\ ERR1015121.breakdancer.out}
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
@@ -485,10 +494,10 @@ Variants}\label{calling-structural-variants}}
 \item
   -116,
 \item
-  31
+  42
 \end{enumerate}
 
-\texttt{grep\ "II:258766"\ ERR1015121.breakdancer.out}
+\texttt{grep\ "258766"\ ERR1015121.breakdancer.out}
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
@@ -510,14 +519,14 @@ Variants}\label{calling-structural-variants}}
 \item
   Yes, a deletion (view as paired, sort by insert size, squish).
 \item
-  There are very few reads mapping of low mapQ and it has a SV score =
-  99
+  There are very few reads mapping, the reads that are mapped are of low
+  mapQ and it has a SV score = 99
 \item
-  Size?
+  Size estimate? \textasciitilde7.5k
 \end{enumerate}
 
 Was the deletion at II:258766 also called by the other structural
-variant software?
+variant software and was the predicted size?
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
@@ -525,7 +534,7 @@ variant software?
 \item
   Yes, SVTYPE=DEL, SVLEN=-7438
 \item
-  DEL called by breakdancer (score=34). Not found by other caller.
+  DEL called by breakdancer (score=59). Not found by other caller Lumpy.
 \item
   Yes, 2 reads support (red).
 \end{enumerate}
@@ -545,9 +554,9 @@ variant software?
   reads in proper pair \textbar{} read unmapped \textbar{} mate unmapped
   \textbar{} not primary alignment \textbar{} PCR optical duplicate
 \item
-  Duplication 471
+  Deletion -625
 \item
-  Deletion -38
+  Deletion -369
 \end{enumerate}
 
     \hypertarget{calling-structural-variants-from-long-reads}{%
@@ -558,25 +567,26 @@ Reads}\label{calling-structural-variants-from-long-reads}}
 \subsubsection{Align the reads with minimap and convert to
 bam}\label{align-the-reads-with-minimap-and-convert-to-bam}}
 
-\texttt{cd\ ref}
-\texttt{minimap2\ -d\ Saccharomyces\_cerevisiae.R64-1-1.dna.toplevel.fa.mmi\ Saccharomyces\_cerevisiae.R64-1-1.dna.toplevel.fa}
-\texttt{cd\ ../exercises4}
-\texttt{minimap2\ -t\ 2\ -x\ map-pb\ -a\ ../ref/Saccharomyces\_cerevisiae.R64-1-1.dna.toplevel.fa.mmi\ YPS128.filtered\_subreads.10x.fastq.gz\ \textbar{}\ samtools\ view\ -b\ -o\ YPS128.filtered\_subreads.10x.fastq.bam\ -}
+\texttt{minimap2\ -t\ 2\ -x\ map-pb\ -a\ ../ref/Saccharomyces\_cerevisiae.R64-1-1.dna.toplevel.fa.mmi\ YPS128.filtered\_subreads.10x.fastq.gz\ \textgreater{}\ YPS128.filtered\_subreads.10x.sam}
+
+\texttt{samtools\ view\ -b\ -o\ YPS128.filtered\_subreads.10x.bam\ YPS128.filtered\_subreads.10x.sam}
 
 \hypertarget{sort-the-bam}{%
 \subsubsection{Sort the bam}\label{sort-the-bam}}
 
-\texttt{samtools\ sort\ -o\ YPS128.filtered\_subreads.10x.fastq.sorted.bam\ -@\ 4\ YPS128.filtered\_subreads.10x.fastq.bam}
+\texttt{samtools\ sort\ -o\ YPS128.filtered\_subreads.10x.sorted.bam\ YPS128.filtered\_subreads.10x.bam}
 
 \hypertarget{index-the-sorted-bam}{%
 \subsubsection{Index the sorted bam}\label{index-the-sorted-bam}}
 
-\texttt{samtools\ index\ YPS128.filtered\_subreads.10x.fastq.sorted.calmd.bam}
+\texttt{samtools\ index\ YPS128.filtered\_subreads.10x.sorted.calmd.bam}
 
 \hypertarget{call-svs-with-sniffles}{%
 \subsubsection{Call SVs with sniffles}\label{call-svs-with-sniffles}}
 
-\texttt{sniffles\ -m\ YPS128.filtered\_subreads.10x.fastq.sorted.calmd.bam\ -v\ YPS128.filtered\_subreads.10x.fastq.vcf}
+\begin{verbatim}
+`sniffles -m YPS128.filtered_subreads.10x.sorted.calmd.bam -v YPS128.filtered_subreads.10x.vcf`
+\end{verbatim}
 
 \hypertarget{exercises}{%
 \subsubsection{Exercises}\label{exercises}}
@@ -584,12 +594,12 @@ bam}\label{align-the-reads-with-minimap-and-convert-to-bam}}
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
 \item
-  What sort of SV was called at on chromosome `Mito' at position 29295?
+  What sort of SV was called at on chromosome `XII' at position 451419?
   \_\_Duplication\_
 \item
   What is the length of the SV? \textbf{17511}
 \item
-  How many reads are supporting the SV? \textbf{14 (RE tag)}
+  How many reads are supporting the SV? \textbf{13 (RE tag)}
 \item
   From a visual inspection of the SV in IGV, can you determine how
   accurate is the breakpoint of the called SV compared to what you see

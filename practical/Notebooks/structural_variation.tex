@@ -383,7 +383,7 @@ postbreak=\raisebox{0ex}[0ex][0ex]{\ensuremath{\color{red}\hookrightarrow\space}
     \newcommand{\boxspacing}{\kern\kvtcb@left@rule\kern\kvtcb@boxsep}
     \makeatother
     \newcommand{\prompt}[4]{
-        {\ttfamily\llap{{\color{#2}[#3]:\hspace{3pt}#4}}\vspace{-\baselineskip}}
+        {\ttfamily\llap{{\color{blue}\LARGE\faKeyboardO\hspace{3pt}#4}}\vspace{-\baselineskip}}
     }
 
 
@@ -495,7 +495,7 @@ installed, run the following commands:
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{2}{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
-breakdancer\PYZhy{}max \PYZhy{}\PYZhy{}help
+breakdancer\PYZhy{}max \PYZhy{}h
 \end{Verbatim}
 \end{tcolorbox}
 
@@ -512,21 +512,21 @@ lumpy \PYZhy{}\PYZhy{}help
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{ }{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
-minimap2
+minimap2 \PYZhy{}\PYZhy{}help
 \end{Verbatim}
 \end{tcolorbox}
 
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{ }{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
-sniffles
+sniffles \PYZhy{}\PYZhy{}help
 \end{Verbatim}
 \end{tcolorbox}
 
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{ }{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
-bedtools
+bedtools \PYZhy{}\PYZhy{}help
 \end{Verbatim}
 \end{tcolorbox}
 
@@ -765,8 +765,8 @@ igv
 \end{tcolorbox}
 
     Open the reference genome. \textbf{Go to ' \textit{Genomes -\textgreater{}
-Load Genome From Server\ldots{}} ' and select ``S. cerevisiae EF3
-r62''.}
+Load Genome From Server\ldots{}} ' and select ``S. cerevisiae
+(SacCer3)''.}
 
 Load the BAM file. \textbf{Go to ' \textit{File -\textgreater{} Load from
 File\ldots{}} `. Select the ``ERR1015121.bam'' BAM file and click'
@@ -780,7 +780,7 @@ File\ldots{}} `. Select the ``breakdancer.dels.bed'' BED file and click'
 \hypertarget{exercises}{%
 \subsubsection{Exercises}\label{exercises}}
 
-Using the navigation bar, go to region II:257,766-259,766.
+Using the navigation bar, go to region II:258,500-266,700.
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
@@ -806,7 +806,8 @@ structural variant caller on the same sample as this exercise.
   directory).
 \item
   Was the structural variant at II:258766 also called by the other
-  structural variant software (lumpy)?
+  structural variant software (lumpy)? If so, what was the predicted
+  size?
 \end{enumerate}
 
 Using the navigation bar, go to to region II:508,064-511,840.
@@ -922,10 +923,10 @@ lumpyexpress \PYZhy{}B ERR1015069.bam \PYZhy{}S ERR1015069.splitters.bam \PYZhy{
 \def\labelenumi{\arabic{enumi}.}
 \setcounter{enumi}{2}
 \item
-  What type of SV event occurs at position IV:383993? What is the length
+  What type of SV event occurs at position IV:383393? What is the length
   of the SV event?
 \item
-  What type of SV event occurs at position XV:43018? What is the length
+  What type of SV event occurs at position IV:437149? What is the length
   of the SV event?
 \end{enumerate}
 
@@ -978,9 +979,10 @@ The sequencing reads are contained in a fastq file:
 
 \texttt{YPS128.filtered\_subreads.10x.fastq.gz}
 
-The reference genome is in the ref directory in a fasta file:
+The reference genome is in the \texttt{../ref} directory in a fasta
+file:
 
-\texttt{Saccharomyces\_cerevisiae.R64-1-1.dna.toplevel.fa}
+\texttt{Saccharomyces\_cerevisiae.R64-1-1.dna.toplevel.fa.gz}
 
     \hypertarget{align-the-data}{%
 \subsection{Align the data}\label{align-the-data}}
@@ -1000,8 +1002,18 @@ minimap2
 \end{Verbatim}
 \end{tcolorbox}
 
-    Align the reads with minimap2 and send the output to a SAM file called
-YPS128.10x.filtered\_subreads.sam.
+    To align the reads with minimap2, first index the reference for minimap2
+
+    \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
+\prompt{In}{incolor}{ }{\boxspacing}
+\begin{Verbatim}[commandchars=\\\{\}]
+\PY{n+nb}{cd} ../ref
+minimap2 \PYZhy{}d Saccharomyces\PYZus{}cerevisiae.R64\PYZhy{}1\PYZhy{}1.dna.toplevel.fa.mmi Saccharomyces\PYZus{}cerevisiae.R64\PYZhy{}1\PYZhy{}1.dna.toplevel.fa.gz
+\end{Verbatim}
+\end{tcolorbox}
+
+    Then use minimap2 to align the reads and send the output to a SAM file
+called YPS128.filtered\_subreads.10x.sam
 
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{ }{\boxspacing}
@@ -1010,11 +1022,11 @@ YPS128.10x.filtered\_subreads.sam.
 \end{Verbatim}
 \end{tcolorbox}
 
-    \textbf{Note:} use the -t parameter to use multiple threads in parallel
+    \textbf{Note:} use the -t option to use multiple threads in parallel
 (this will increase the speed of the alignment by using more than one
-CPU core, I suggest using 2).
+CPU core, I suggest using 2). Also look at the -x option.
 
-    Convert the output to BAM format \textbf{Hint:} use samtools view -b
+    Convert the SAM file to BAM.
 
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{ }{\boxspacing}
@@ -1024,7 +1036,7 @@ CPU core, I suggest using 2).
 \end{tcolorbox}
 
     Sort the BAM file and produce a sorted BAM file called
-\texttt{YPS128.10x.filtered\_subreads.sorted.bam}. \textbf{Hint:} Use
+\texttt{YPS128.filtered\_subreads.10X.sorted.bam}. \textbf{Hint:} Use
 samtools sort.
 
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
@@ -1040,7 +1052,8 @@ calling without requiring access to the entire original reference.
     \begin{tcolorbox}[breakable, size=fbox, boxrule=1pt, pad at break*=1mm,colback=cellbackground, colframe=cellborder]
 \prompt{In}{incolor}{ }{\boxspacing}
 \begin{Verbatim}[commandchars=\\\{\}]
-samtools calmd YPS128.filtered\PYZus{}subreads.10x.fastq.sorted.bam ../ref/Saccharomyces\PYZus{}cerevisiae.R64\PYZhy{}1\PYZhy{}1.dna.toplevel.fa \PY{p}{|}samtools view \PYZhy{}o YPS128.filtered\PYZus{}subreads.10x.fastq.sorted.calmd.bam \PYZhy{}O bam \PYZhy{}
+gunzip ../ref/Saccharomyces\PYZus{}cerevisiae.R64\PYZhy{}1\PYZhy{}1.dna.toplevel.fa.gz
+samtools calmd YPS128.filtered\PYZus{}subreads.10x.sorted.bam ../ref/Saccharomyces\PYZus{}cerevisiae.R64\PYZhy{}1\PYZhy{}1.dna.toplevel.fa \PY{p}{|}samtools view \PYZhy{}o YPS128.filtered\PYZus{}subreads.10x.fastq.sorted.calmd.bam \PYZhy{}O bam \PYZhy{}
 \end{Verbatim}
 \end{tcolorbox}
 
@@ -1094,8 +1107,11 @@ igv
 \end{tcolorbox}
 
     Open the reference genome
-\texttt{Saccharomyces\_cerevisiae.R64-1-1.dna.toplevel.fa} and load the
-VCF file \texttt{YPS128.10x.vcf}. Now answer the questions that follow.
+\texttt{ref/Saccharomyces\_cerevisiae.R64-1-1.dna.toplevel.fa} and load
+the BAM file
+\texttt{YPS128.filtered\_subreads.10x.fastq.sorted.calmd.bam} and the
+VCF file \texttt{YPS128.filtered\_subreads.10x.vcf}. Now answer the
+questions that follow.
 
     \hypertarget{exercises}{%
 \subsection{Exercises}\label{exercises}}
@@ -1104,7 +1120,7 @@ VCF file \texttt{YPS128.10x.vcf}. Now answer the questions that follow.
 \def\labelenumi{\arabic{enumi}.}
 \tightlist
 \item
-  What sort of SV was called at on chromosome `Mito' at position 29295?
+  What sort of SV was called at on chromosome `XII' at position 451419?
 \item
   What is the length of the SV?
 \item
@@ -1112,7 +1128,7 @@ VCF file \texttt{YPS128.10x.vcf}. Now answer the questions that follow.
 \item
   From a visual inspection of the SV in IGV, can you determine how
   accurate is the breakpoint of the called SV compared to what you see
-  in IGV? {[}\textbf{Hint:} Better directions on what to do here.{]}
+  in IGV?
 \end{enumerate}
 
     Now continue to the next section of the tutorial:
